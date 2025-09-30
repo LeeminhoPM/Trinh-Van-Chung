@@ -2,8 +2,9 @@ using System.Diagnostics;
 using ChungTrinhj.Models;
 using Microsoft.AspNetCore.Mvc;
 
-namespace ChungTrinhj.Controllers
+namespace ChungTrinhj.Areas.Customer.Controllers
 {
+    [Area("Customer")]
     public class HomeController : Controller
     {
         private readonly ILogger<HomeController> _logger;
