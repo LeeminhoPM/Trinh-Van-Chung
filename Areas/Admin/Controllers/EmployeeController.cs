@@ -1,6 +1,7 @@
 ﻿using ChungTrinhj.Models;
 using ChungTrinhj.Models.ViewModels;
 using ChungTrinhj.Repository.IRepository;
+using Microsoft.AspNetCore.Http.Metadata;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using System.Collections.Generic;
@@ -11,10 +12,12 @@ namespace ChungTrinhj.Areas.Admin.Controllers
     public class EmployeeController : Controller
     {
         private readonly IUnitOfWork _unitOfWork;
+        private readonly IWebHostEnvironment _webHostEnvironment;
 
-        public EmployeeController(IUnitOfWork unitOfWork)
+        public EmployeeController(IUnitOfWork unitOfWork, IWebHostEnvironment webHostEnvironment)
         {
             _unitOfWork = unitOfWork;
+            _webHostEnvironment = webHostEnvironment;
         }
 
         public IActionResult Index()
@@ -23,7 +26,7 @@ namespace ChungTrinhj.Areas.Admin.Controllers
             return View(objEmployeeList);
         }
 
-        public IActionResult Create()
+        public IActionResult Upsert(int? id)
         {
             EmployeeVM employeeVM = new()
             {
@@ -34,15 +37,56 @@ namespace ChungTrinhj.Areas.Admin.Controllers
                     Value = u.Id.ToString(),
                 })
             };
-            return View(employeeVM);
+
+            if (id == null || id == 0)
+            {
+                // Create
+                return View(employeeVM);
+            }
+            else
+            {
+                // Update
+                employeeVM.employee = _unitOfWork.Employee.Get(u => u.Id == id);
+                return View(employeeVM);
+            }
         }
 
         [HttpPost]
-        public IActionResult Create(EmployeeVM obj)
+        public IActionResult Upsert(EmployeeVM obj, IFormFile? file)
         {
             if (ModelState.IsValid)
             {
-                _unitOfWork.Employee.Add(obj.employee);
+                string wwwRootPath = _webHostEnvironment.WebRootPath;
+                if (file != null)
+                {
+                    string fileName = Guid.NewGuid().ToString() + Path.GetExtension(file.FileName);
+                    string employeePath = Path.Combine(wwwRootPath, @"images\employee");
+
+                    // Xóa file ảnh nếu có khi thêm ảnh mới
+                    if (!string.IsNullOrEmpty(obj.employee.imageUrl))
+                    {
+                        var oldImagePath = Path.Combine(wwwRootPath, obj.employee.imageUrl.TrimStart('\\'));
+
+                        if (System.IO.File.Exists(oldImagePath))
+                        {
+                            System.IO.File.Delete(oldImagePath);
+                        }
+                    }
+
+                    using (var fileStream = new FileStream(Path.Combine(employeePath, fileName), FileMode.Create))
+                    {
+                        file.CopyTo(fileStream);
+                    }
+                    obj.employee.imageUrl = @"\images\employee\" + fileName;
+                }
+                if (obj.employee.Id == 0)
+                {
+                    _unitOfWork.Employee.Add(obj.employee);
+                }
+                else
+                {
+                    _unitOfWork.Employee.Update(obj.employee); 
+                }
                 _unitOfWork.Save();
                 TempData["Success"] = "Employee added Successfully";
                 return RedirectToAction("Index");
@@ -56,35 +100,6 @@ namespace ChungTrinhj.Areas.Admin.Controllers
                 });
                 return View(obj);
             }
-        }
-
-        public IActionResult Edit(int? id)
-        {
-            if (id == null || id == 0)
-            {
-                return NotFound();
-            }
-
-            Employee? employeeFromDb = _unitOfWork.Employee.Get(u => u.Id == id);
-            if (employeeFromDb == null)
-            {
-                return NotFound();
-            }
-
-            return View(employeeFromDb);
-        }
-
-        [HttpPost]
-        public IActionResult Edit(Employee obj)
-        {
-            if (ModelState.IsValid)
-            {
-                _unitOfWork.Employee.Update(obj);
-                _unitOfWork.Save();
-                TempData["success"] = "Employee updated successfully";
-                return RedirectToAction("Index");
-            }
-            return View();
         }
 
         public IActionResult Delete(int? id)

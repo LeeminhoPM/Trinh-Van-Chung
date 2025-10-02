@@ -1,0 +1,123 @@
+﻿@model EmployeeVM
+
+<div class="card shadow border-0 my-4">
+    <div class="card-header bg-secondary bg-gradient ml-0 py-3">
+        <div class="row">
+            <div class="col-12 text-center">
+                <h2 class="text-white py-2">@(Model.employee.Id != 0 ? "Update" : "Create") Employee</h2>
+            </div>
+        </div>
+    </div>
+    <div class="card-body p-4">
+        <form method="post" class="row" enctype="multipart/form-data">
+            <input asp-for="employee.Id" hidden />
+            <input asp-for="employee.imageUrl" hidden />
+            <div class="row">
+                <div class="col-10">
+                    <div class="border p-3">
+                        <div class="form-floating py-2 col-12">
+                            <input asp-for="employee.Id" class="form-control border-0 shadow" />
+                            <label asp-for="employee.Id" class="ms-2"></label>
+                            <span asp-validation-for="employee.Id" class="text-danger"></span>
+                        </div>
+                        <div class="form-floating py-2 col-12">
+                            <input asp-for="employee.FullName" class="form-control border-0 shadow" />
+                            <label asp-for="employee.FullName" class="ms-2"></label>
+                            <span asp-validation-for="employee.FullName" class="text-danger"></span>
+                        </div>
+                        <div class="form-check-inline py-2 col-12">
+                            <label asp-for="employee.Gender" class="text-muted ms-3 pe-3"></label>
+                            <input asp-for="employee.Gender" type="radio" value="Nam" id="male-input-radio" class="form-check-input shadow" />
+                            <label class="form-check-label pe-3" for="male-input-radio">Nam</label>
+                            <input asp-for="employee.Gender" type="radio" value="Nữ" id="female-input-radio" class="form-check-input shadow" />
+                            <label class="form-check-label pe-3" for="female-input-radio">Nữ</label>
+                            <span asp-validation-for="employee.Gender" class="text-danger"></span>
+                        </div>
+                        <div class="form-floating py-2 col-12">
+                            <input asp-for="employee.Phone" class="form-control border-0 shadow" />
+                            <label asp-for="employee.Phone" class="ms-2"></label>
+                            <span asp-validation-for="employee.Phone" class="text-danger"></span>
+                        </div>
+                        <div class="form-floating py-2 col-12">
+                            <input asp-for="employee.Email" type="email" class="form-control border-0 shadow" />
+                            <label asp-for="employee.Email" class="ms-2"></label>
+                            <span asp-validation-for="employee.Email" class="text-danger"></span>
+                        </div>
+                        <div class="form-floating py-2 col-12">
+                            <input asp-for="employee.Salary" type="number" class="form-control border-0 shadow" />
+                            <label asp-for="employee.Salary" class="ms-2"></label>
+                            <span asp-validation-for="employee.Salary" class="text-danger"></span>
+                        </div>
+                        <div class="py-2 col-12">
+                            <label asp-for="employee.Status" class="ms-2 text-muted"></label>
+                            <textarea asp-for="employee.Status" class="form-control border-0 shadow"></textarea>
+                            <span asp-validation-for="employee.Status" class="text-danger"></span>
+                        </div>
+                        <div class="form-floating py-2 col-12">
+                            <select asp-for="employee.Status" asp-items="@Model.employeeList" class="form-select border-0 shadow">
+                                <option disabled selected>-- Select Employee to work with --</option>
+                            </select>
+                            <label asp-for="employee.Id" class="ms-2"></label>
+                            <span asp-validation-for="employee.Id" class="text-danger"></span>
+                        </div>
+
+                        <div class="form-floating py-2 col-12">
+                            <input type="file" name="file" class="form-control border-0 shadow" />
+                            <label asp-for="employee.imageUrl" class="ms-2"></label>
+                            <span asp-validation-for="employee.imageUrl" class="text-danger"></span>
+                        </div>
+
+                        <div class="row pt-2">
+                            <div class="col-6 col-md-3">
+                                @if (Model.employee.Id != 0)
+                                {
+                                    <button type="submit" class="btn btn-primary form-control">Update</button>
+                                }
+                                else
+                                {
+                                    <button type="submit" class="btn btn-primary form-control">Create</button>
+                                }
+                            </div>
+                            <div class="col-6 col-md-3">
+                                <a asp-controller="Employee" asp-action="Index" class="btn btn-outline-primary border form-control">
+                                    Back to list
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-2">
+                    <img src="@Model.employee.imageUrl" width="100%" style="border-radius: 5px; border: 1px solid #bbb9b9" />
+                </div>
+            </div>
+            
+        </form>
+    </div>
+</div>
+
+@section Scripts {
+    <script>
+        tinymce.init({
+          selector: 'textarea',
+          plugins: [
+            // Core editing features
+            'anchor', 'autolink', 'charmap', 'codesample', 'emoticons', 'link', 'lists', 'media', 'searchreplace', 'table', 'visualblocks', 'wordcount',
+            // Your account includes a free trial of TinyMCE premium features
+            // Try the most popular premium features until Oct 16, 2025:
+            'checklist', 'mediaembed', 'casechange', 'formatpainter', 'pageembed', 'a11ychecker', 'tinymcespellchecker', 'permanentpen', 'powerpaste', 'advtable', 'advcode', 'advtemplate', 'ai', 'uploadcare', 'mentions', 'tinycomments', 'tableofcontents', 'footnotes', 'mergetags', 'autocorrect', 'typography', 'inlinecss', 'markdown','importword', 'exportword', 'exportpdf'
+          ],
+          toolbar: 'undo redo | blocks fontfamily fontsize | bold italic underline strikethrough | link media table mergetags | addcomment showcomments | spellcheckdialog a11ycheck typography uploadcare | align lineheight | checklist numlist bullist indent outdent | emoticons charmap | removeformat',
+          tinycomments_mode: 'embedded',
+          tinycomments_author: 'Author name',
+          mergetags_list: [
+            { value: 'First.Name', title: 'First Name' },
+            { value: 'Email', title: 'Email' },
+          ],
+          ai_request: (request, respondWith) => respondWith.string(() => Promise.reject('See docs to implement AI Assistant')),
+          uploadcare_public_key: '36345c5d78714ca92eaf',
+        });
+    </script>
+    @{
+        <partial name="_ValidationScriptsPartial" />
+    }
+}
