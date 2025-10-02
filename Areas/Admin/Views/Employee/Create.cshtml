@@ -1,4 +1,4 @@
-﻿@model Employee
+﻿@model EmployeeVM
 
 <div class="card shadow border-0 my-4">
     <div class="card-header bg-secondary bg-gradient ml-0 py-3">
@@ -12,49 +12,55 @@
         <form method="post" class="row">
             <div class="border p-3">
                 <div class="form-floating py-2 col-12">
-                    <input asp-for="Id" class="form-control border-0 shadow" />
-                    <label asp-for="Id" class="ms-2"></label>
-                    <span asp-validation-for="Id" class="text-danger"></span>
+                    <input asp-for="employee.Id" class="form-control border-0 shadow" />
+                    <label asp-for="employee.Id" class="ms-2"></label>
+                    <span asp-validation-for="employee.Id" class="text-danger"></span>
                 </div>
                 <div class="form-floating py-2 col-12">
-                    <input asp-for="FullName" class="form-control border-0 shadow" />
-                    <label asp-for="FullName" class="ms-2"></label>
-                    <span asp-validation-for="FullName" class="text-danger"></span>
+                    <input asp-for="employee.FullName" class="form-control border-0 shadow" />
+                    <label asp-for="employee.FullName" class="ms-2"></label>
+                    <span asp-validation-for="employee.FullName" class="text-danger"></span>
                 </div>
                 <div class="form-check-inline py-2 col-12">
-                    <label asp-for="Gender" class="text-muted ms-3 pe-3" style="transition: opacity 0.1s ease-in-out, transform 0.1s ease-in-out;"></label>
-                    <input asp-for="Gender" type="radio" value="Nam" id="male-input-radio" class="form-check-input shadow" />
+                    <label asp-for="employee.Gender" class="text-muted ms-3 pe-3" style="transition: opacity 0.1s ease-in-out, transform 0.1s ease-in-out;"></label>
+                    <input asp-for="employee.Gender" type="radio" value="Nam" id="male-input-radio" class="form-check-input shadow" />
                     <label class="form-check-label pe-3" for="male-input-radio">Nam</label>
-                    <input asp-for="Gender" type="radio" value="Nữ" id="female-input-radio" class="form-check-input shadow" />
+                    <input asp-for="employee.Gender" type="radio" value="Nữ" id="female-input-radio" class="form-check-input shadow" />
                     <label class="form-check-label pe-3" for="female-input-radio">Nữ</label>
-                    <span asp-validation-for="Gender" class="text-danger"></span>
+                    <span asp-validation-for="employee.Gender" class="text-danger"></span>
                 </div>
                 <div class="form-floating py-2 col-12">
-                    <input asp-for="Phone" class="form-control border-0 shadow" />
-                    <label asp-for="Phone" class="ms-2"></label>
-                    <span asp-validation-for="Phone" class="text-danger"></span>
+                    <input asp-for="employee.Phone" class="form-control border-0 shadow" />
+                    <label asp-for="employee.Phone" class="ms-2"></label>
+                    <span asp-validation-for="employee.Phone" class="text-danger"></span>
                 </div>
                 <div class="form-floating py-2 col-12">
-                    <input asp-for="Email" type="email" class="form-control border-0 shadow" />
-                    <label asp-for="Email" class="ms-2"></label>
-                    <span asp-validation-for="Email" class="text-danger"></span>
+                    <input asp-for="employee.Email" type="email" class="form-control border-0 shadow" />
+                    <label asp-for="employee.Email" class="ms-2"></label>
+                    <span asp-validation-for="employee.Email" class="text-danger"></span>
                 </div>
                 <div class="form-floating py-2 col-12">
-                    <input asp-for="Salary" type="number" class="form-control border-0 shadow" />
-                    <label asp-for="Salary" class="ms-2"></label>
-                    <span asp-validation-for="Salary" class="text-danger"></span>
+                    <input asp-for="employee.Salary" type="number" class="form-control border-0 shadow" />
+                    <label asp-for="employee.Salary" class="ms-2"></label>
+                    <span asp-validation-for="employee.Salary" class="text-danger"></span>
                 </div>
                 <div class="form-floating py-2 col-12">
-                    <input asp-for="Status" class="form-control border-0 shadow" />
-                    <label asp-for="Status" class="ms-2"></label>
-                    <span asp-validation-for="Status" class="text-danger"></span>
+                    <input asp-for="employee.Status" class="form-control border-0 shadow" />
+                    <label asp-for="employee.Status" class="ms-2"></label>
+                    <span asp-validation-for="employee.Status" class="text-danger"></span>
                 </div>
                 <div class="form-floating py-2 col-12">
-                    <select asp-for="Status" asp-items="ViewBag.employeeList" class="form-select border-0 shadow">
+                    <select asp-for="employee.Status" asp-items="@Model.employeeList" class="form-select border-0 shadow">
                         <option disabled selected>-- Select Employee to work with --</option>
                     </select>
-                    <label asp-for="Id" class="ms-2"></label>
-                    <span asp-validation-for="Id" class="text-danger"></span>
+                    <label asp-for="employee.Id" class="ms-2"></label>
+                    <span asp-validation-for="employee.Id" class="text-danger"></span>
+                </div>
+
+                <div class="form-floating py-2 col-12">
+                    <input asp-for="employee.imageUrl" class="form-control border-0 shadow" />
+                    <label asp-for="employee.imageUrl" class="ms-2"></label>
+                    <span asp-validation-for="employee.imageUrl" class="text-danger"></span>
                 </div>
 
                 <div class="row pt-2">

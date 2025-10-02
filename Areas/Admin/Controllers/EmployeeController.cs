@@ -1,7 +1,9 @@
 ﻿using ChungTrinhj.Models;
+using ChungTrinhj.Models.ViewModels;
 using ChungTrinhj.Repository.IRepository;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
+using System.Collections.Generic;
 
 namespace ChungTrinhj.Areas.Admin.Controllers
 {
@@ -21,28 +23,39 @@ namespace ChungTrinhj.Areas.Admin.Controllers
             return View(objEmployeeList);
         }
 
-        public IActionResult Create(int id)
+        public IActionResult Create()
         {
-            IEnumerable<SelectListItem> employeeList = _unitOfWork.Employee.GetAll().Select(u => new SelectListItem
+            EmployeeVM employeeVM = new()
             {
-                Text = u.FullName,
-                Value = u.Id.ToString(),
-            });
-            ViewBag.employeeList = employeeList;
-            return View();
+                employee = new Employee(),
+                employeeList = _unitOfWork.Employee.GetAll().Select(u => new SelectListItem
+                {
+                    Text = u.FullName,
+                    Value = u.Id.ToString(),
+                })
+            };
+            return View(employeeVM);
         }
 
         [HttpPost]
-        public IActionResult Create(Employee obj)
+        public IActionResult Create(EmployeeVM obj)
         {
             if (ModelState.IsValid)
             {
-                _unitOfWork.Employee.Add(obj);
+                _unitOfWork.Employee.Add(obj.employee);
                 _unitOfWork.Save();
                 TempData["Success"] = "Employee added Successfully";
                 return RedirectToAction("Index");
             }
-            return View();
+            else
+            {
+                obj.employeeList = _unitOfWork.Employee.GetAll().Select(u => new SelectListItem
+                {
+                    Text = u.FullName,
+                    Value = u.Id.ToString(),
+                });
+                return View(obj);
+            }
         }
 
         public IActionResult Edit(int? id)
