@@ -2,6 +2,7 @@
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 
 namespace ChungTrinhj.Models;
 
@@ -13,7 +14,7 @@ public partial class Employee
     [Required(ErrorMessage = "Nhập tên đê")]
     [Display(Name = "Full Name")]
     public string FullName { get; set; } = null!;
-
+  
     [Required(ErrorMessage = "Chọn giới tính đê")]
     public string Gender { get; set; } = null!;
 

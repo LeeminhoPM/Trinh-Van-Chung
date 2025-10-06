@@ -18,42 +18,23 @@
             </div>
         </div>
 
-        <table class="table table-bordered table-striped">
+        <table id="tblData" class="table table-bordered table-striped" style="width: 100%">
             <thead>
                 <tr>
-                    <th>ID</th>
                     <th>Full Name</th>
                     <th>Gender</th>
                     <th>Phone</th>
                     <th>Email</th>
                     <th>Salary</th>
                     <th>Status</th>
+                    <th>ID</th>
                 </tr>
             </thead>
-            <tbody>
-                @foreach (var obj in Model.OrderBy(u => u.Id))
-                {
-                    <tr>
-                        <td>@obj.Id</td>
-                        <td>@obj.FullName</td>
-                        <td>@obj.Gender</td>
-                        <td>@obj.Phone</td>
-                        <td>@obj.Email</td>
-                        <td>@obj.Salary</td>
-                        <td>@obj.Status</td>
-                        <td>
-                            <div class="w-75 btn-group" role="group">
-                                <a asp-controller="Employee" asp-action="Upsert" asp-route-id="@obj.Id" class="btn btn-primary mx-2">
-                                    Edit
-                                </a>
-                                <a asp-controller="Employee" asp-action="Delete" asp-route-id="@obj.Id" class="btn btn-danger mx-2">
-                                    Delete
-                                </a>
-                            </div>
-                        </td>
-                    </tr>
-                }
-            </tbody>
+            
         </table>
     </div>
 </div>
+
+@section Scripts{
+    <script src="~/js/employee.js"></script>
+}

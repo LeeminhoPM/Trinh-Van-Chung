@@ -1,14 +1,18 @@
 ﻿using ChungTrinhj.Models;
 using ChungTrinhj.Models.ViewModels;
 using ChungTrinhj.Repository.IRepository;
+using ChungTrinhj.Utility;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http.Metadata;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
+using Microsoft.DotNet.Scaffolding.Shared.Messaging;
 using System.Collections.Generic;
 
 namespace ChungTrinhj.Areas.Admin.Controllers
 {
     [Area("Admin")]
+    [Authorize(Roles = SD.Role_Admin)]
     public class EmployeeController : Controller
     {
         private readonly IUnitOfWork _unitOfWork;
@@ -85,7 +89,7 @@ namespace ChungTrinhj.Areas.Admin.Controllers
                 }
                 else
                 {
-                    _unitOfWork.Employee.Update(obj.employee); 
+                    _unitOfWork.Employee.Update(obj.employee);
                 }
                 _unitOfWork.Save();
                 TempData["Success"] = "Employee added Successfully";
@@ -102,34 +106,32 @@ namespace ChungTrinhj.Areas.Admin.Controllers
             }
         }
 
-        public IActionResult Delete(int? id)
+        [HttpGet]
+        public IActionResult GetAll()
         {
-            if (id == null || id == 0)
-            {
-                return NotFound();
-            }
-
-            Employee? employeeFromDb = _unitOfWork.Employee.Get(u => u.Id == id);
-            if (employeeFromDb == null)
-            {
-                return NotFound();
-            }
-
-            return View(employeeFromDb);
+            List<Employee> objEmployeeList = _unitOfWork.Employee.GetAll().ToList();
+            return Json(new { data = objEmployeeList });
         }
 
-        [HttpPost, ActionName("Delete")]
-        public IActionResult DeletePOST(int? id)
+        [HttpDelete]
+        public IActionResult Delete(int? id)
         {
-            Employee? obj = _unitOfWork.Employee.Get(u => u.Id == id);
-            if (obj == null)
+            var employeeToBeDeleted = _unitOfWork.Employee.Get(u => u.Id == id);
+            if (employeeToBeDeleted == null)
             {
-                return NotFound();
+                return Json(new { success = false, message = "Error while deleting" });
             }
-            _unitOfWork.Employee.Remove(obj);
+
+            var oldImagePath = Path.Combine(_webHostEnvironment.WebRootPath, employeeToBeDeleted.imageUrl.TrimStart('\\'));
+
+            if (System.IO.File.Exists(oldImagePath))
+            {
+                System.IO.File.Delete(oldImagePath);
+            }
+
+            _unitOfWork.Employee.Remove(employeeToBeDeleted);
             _unitOfWork.Save();
-            TempData["success"] = "Product deleted successfully";
-            return RedirectToAction("Index");
+            return Json(new { success = true, message = "Delete Successful" });
         }
     }
 }

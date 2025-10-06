@@ -1,10 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 
 namespace ChungTrinhj.Models;
 
-public partial class ChungTrinhjDbContext : DbContext
+public partial class ChungTrinhjDbContext : IdentityDbContext
 {
     public ChungTrinhjDbContext()
     {
@@ -16,12 +17,15 @@ public partial class ChungTrinhjDbContext : DbContext
     }
 
     public virtual DbSet<Employee> Employees { get; set; }
+    public virtual DbSet<ApplicationUser> ApplicationUsers { get; set; }
 
     protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         => optionsBuilder.UseSqlServer("Server=LAPTOP-5PUN7V05;Database=ChungTrinhjDB;Trusted_Connection=True;Encrypt=False");
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
+        base.OnModelCreating(modelBuilder);
+
         modelBuilder.Entity<Employee>(entity =>
         {
             entity.ToTable("Employee");
